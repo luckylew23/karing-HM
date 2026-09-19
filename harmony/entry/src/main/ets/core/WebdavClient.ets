@@ -2,10 +2,12 @@ import { http } from '@kit.NetworkKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 
 const TAG = 'WebdavClient';
+const SUB_DIR = '/karing/';
 
 /**
  * WebDAV 客户端
  * 实现标准 WebDAV 协议：PROPFIND / PUT / GET / DELETE
+ * 备份文件存储在 WebDAV 根目录下的 karing/ 子目录
  */
 export class WebdavClient {
   private baseUrl: string;
@@ -50,10 +52,26 @@ export class WebdavClient {
     }
   }
 
-  /** 连接测试：PROPFIND 根目录 */
+  /** 确保 karing/ 子目录存在（MKCOL） */
+  private async ensureDir(): Promise<void> {
+    try {
+      const req = http.createHttp();
+      await req.request(this.baseUrl + SUB_DIR, {
+        method: 'MKCOL' as http.RequestMethod,
+        header: { 'Authorization': this.authHeader() },
+        connectTimeout: 10000
+      });
+      req.destroy();
+    } catch (e) {
+      // 目录已存在会返回 405，忽略
+    }
+  }
+
+  /** 连接测试：PROPFIND karing/ 目录 */
   async connect(): Promise<boolean> {
     try {
-      const r: ReqResult = await this.request('PROPFIND', '/');
+      await this.ensureDir();
+      const r: ReqResult = await this.request('PROPFIND', SUB_DIR);
       hilog.info(0x0000, TAG, 'connect status=%{public}d', r.status);
       return r.status >= 200 && r.status < 300;
     } catch (e) {
@@ -64,7 +82,7 @@ export class WebdavClient {
 
   /** 列出备份文件 */
   async list(): Promise<string[]> {
-    const r: ReqResult = await this.request('PROPFIND', '/');
+    const r: ReqResult = await this.request('PROPFIND', SUB_DIR);
     if (r.status >= 400) {
       throw new Error('PROPFIND failed: ' + r.status);
     }
@@ -82,16 +100,17 @@ export class WebdavClient {
     return files;
   }
 
-  /** 上传文件 */
+  /** 上传文件到 karing/ 目录 */
   async upload(filename: string, data: ArrayBuffer): Promise<void> {
-    const url: string = this.baseUrl + '/' + filename;
+    await this.ensureDir();
+    const url: string = this.baseUrl + SUB_DIR + filename;
     const req = http.createHttp();
     try {
       const resp = await req.request(url, {
         method: http.RequestMethod.PUT,
         header: {
           'Authorization': this.authHeader(),
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/zip'
         },
         extraData: data,
         connectTimeout: 15000,
@@ -105,9 +124,9 @@ export class WebdavClient {
     }
   }
 
-  /** 下载文件 */
+  /** 从 karing/ 目录下载文件 */
   async download(filename: string): Promise<ArrayBuffer> {
-    const url: string = this.baseUrl + '/' + filename;
+    const url: string = this.baseUrl + SUB_DIR + filename;
     const req = http.createHttp();
     try {
       const resp = await req.request(url, {
@@ -126,9 +145,9 @@ export class WebdavClient {
     }
   }
 
-  /** 删除文件 */
+  /** 删除 karing/ 目录下的文件 */
   async delete(filename: string): Promise<void> {
-    const r: ReqResult = await this.request('DELETE', '/' + filename);
+    const r: ReqResult = await this.request('DELETE', SUB_DIR + filename);
     if (r.status >= 300) {
       throw new Error('DELETE failed: ' + r.status);
     }
