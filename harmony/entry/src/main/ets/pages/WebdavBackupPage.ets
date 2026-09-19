@@ -1,15 +1,21 @@
 import { WebdavClient } from '../core/WebdavClient';
-import { BackupManager } from '../core/BackupManager';
 import { SettingsManager } from '../core/SettingsManager';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { common } from '@kit.AbilityKit';
-import { util } from '@kit.ArkTS';
+import { fileIo } from '@kit.CoreFileKit';
+import { featureAbility } from '@kit.AbilityKit';
 
 const TAG = 'WebdavPage';
+
+interface KaringBox {
+  backupZip(dir: string, zipPath: string): string;
+  restoreZip(zipPath: string, dir: string): string;
+}
 
 /**
  * WebDAV 备份恢复页
  * 对应 Karing 的 BackupAndSyncWebdavScreen
+ * 备份格式：ZIP（与 karing 原版兼容）
  */
 @Entry
 @Component
@@ -23,6 +29,7 @@ struct WebdavBackupPage {
   @State status: string = '';
   private webdav: WebdavClient | null = null;
   private filesDir: string = '';
+  private cacheDir: string = '';
 
   aboutToAppear(): void {
     const s = SettingsManager.getConfig();
@@ -31,9 +38,17 @@ struct WebdavBackupPage {
     this.password = s.webdavPassword;
     const ctx = getContext(this) as common.UIAbilityContext;
     this.filesDir = ctx.filesDir;
+    this.cacheDir = ctx.cacheDir;
     if (this.url.length > 0 && this.user.length > 0) {
       this.connectAndList();
     }
+  }
+
+  private getBackupFileName(): string {
+    const now: Date = new Date();
+    const pad = (n: number): string => n < 10 ? '0' + n : '' + n;
+    const stamp: string = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    return `karing-backup-${stamp}.zip`;
   }
 
   async connectAndList(): Promise<void> {
@@ -60,14 +75,28 @@ struct WebdavBackupPage {
     this.uploading = true;
     this.status = '备份中...';
     try {
-      const files = BackupManager.collectBackupFiles(this.filesDir);
-      const obj: Record<string, string> = {};
-      files.forEach((v: string, k: string) => { obj[k] = v; });
-      const jsonStr: string = JSON.stringify(obj);
-      const encoder = new util.TextEncoder();
-      const encoded: Uint8Array = encoder.encodeInto(jsonStr);
-      const filename: string = BackupManager.getBackupFileName().replace('.zip', '.json');
-      await this.webdav.upload(filename, encoded.buffer as ArrayBuffer);
+      const filename: string = this.getBackupFileName();
+      const zipPath: string = this.cacheDir + '/' + filename;
+
+      // 调用 Go 核心打包
+      const karingbox: KaringBox = globalThis.karingbox as KaringBox;
+      const ret: string = karingbox.backupZip(this.filesDir, zipPath);
+      if (ret.startsWith('ERR')) {
+        this.status = '打包失败: ' + ret;
+        this.uploading = false;
+        return;
+      }
+
+      // 读取 zip 文件并上传
+      const f = fileIo.openSync(zipPath, fileIo.OpenMode.READ_ONLY);
+      const stat = fileIo.statSync(zipPath);
+      const buf = new ArrayBuffer(stat.size);
+      fileIo.readSync(f.fd, buf);
+      fileIo.closeSync(f);
+
+      await this.webdav.upload(filename, buf);
+      fileIo.rmdirSync(zipPath)
+
       this.status = '备份成功: ' + filename;
       await this.connectAndList();
     } catch (e) {
@@ -80,10 +109,22 @@ struct WebdavBackupPage {
     if (!this.webdav) return;
     this.status = '恢复中: ' + filename;
     try {
+      // 下载到临时文件
+      const zipPath: string = this.cacheDir + '/' + filename;
       const data: ArrayBuffer = await this.webdav.download(filename);
-      const decoder = util.TextDecoder.create('utf-8');
-      const text: string = decoder.decodeToString(new Uint8Array(data));
-      hilog.info(0x0000, TAG, 'restored, size=%{public}d', data.byteLength);
+      const f = fileIo.openSync(zipPath, fileIo.OpenMode.READ_WRITE | fileIo.OpenMode.CREATE);
+      fileIo.writeSync(f.fd, data);
+      fileIo.closeSync(f);
+
+      // 调用 Go 核心解压
+      const karingbox: KaringBox = globalThis.karingbox as KaringBox;
+      const ret: string = karingbox.restoreZip(zipPath, this.filesDir);
+      fileIo.rmdirSync(zipPath);
+
+      if (ret.startsWith('ERR')) {
+        this.status = '恢复失败: ' + ret;
+        return;
+      }
       this.status = '恢复成功: ' + filename;
     } catch (e) {
       this.status = '恢复失败: ' + JSON.stringify(e);

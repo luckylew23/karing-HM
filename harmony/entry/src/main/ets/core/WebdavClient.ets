@@ -74,7 +74,7 @@ export class WebdavClient {
     while ((m = hrefRe.exec(r.body)) !== null) {
       const href: string = decodeURIComponent(m[1]);
       const name: string = href.split('/').pop() || '';
-      if (name.endsWith('.json') && name.includes('karing-backup')) {
+      if (name.endsWith('.zip') && name.includes('karing-backup')) {
         files.push(name);
       }
     }

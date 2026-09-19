@@ -94,6 +94,8 @@ extern char* karingbox_start(int32_t fd);
 extern char* karingbox_stop(void);
 extern int32_t karingbox_is_running(void);
 extern char* karingbox_version(void);
+extern char* karingbox_backup_zip(char* dir, char* zipPath);
+extern char* karingbox_restore_zip(char* zipPath, char* dir);
 
 #ifdef __cplusplus
 }
