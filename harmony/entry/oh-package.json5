@@ -1,0 +1,8 @@
+{
+  "modelVersion": "6.0.0",
+  "name": "entry",
+  "version": "0.1.0",
+  "description": "karing-HM entry module（ArkTS 壳 + sing-box bridge）",
+  "main": "",
+  "dependencies": {}
+}

@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/Users/admin/Work/karing-HM/harmony/entry/.cxx/default/default/debug/arm64-v8a",
+  "command": "/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm/bin/clang++ --target=aarch64-linux-ohos --gcc-toolchain=/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm --sysroot=/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/sysroot -Dkaring_vpn_EXPORTS -I/Users/admin/Work/karing-HM/harmony/entry/src/main/cpp -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security   -D__MUSL__ -O0 -g -fno-limit-debug-info  -fPIC -o CMakeFiles/karing_vpn.dir/vpn_tun.cpp.o -c /Users/admin/Work/karing-HM/harmony/entry/src/main/cpp/vpn_tun.cpp",
+  "file": "/Users/admin/Work/karing-HM/harmony/entry/src/main/cpp/vpn_tun.cpp",
+  "output": "CMakeFiles/karing_vpn.dir/vpn_tun.cpp.o"
+},
+{
+  "directory": "/Users/admin/Work/karing-HM/harmony/entry/.cxx/default/default/debug/arm64-v8a",
+  "command": "/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm/bin/clang++ --target=aarch64-linux-ohos --gcc-toolchain=/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/llvm --sysroot=/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/sysroot -Dkaringbox_EXPORTS -I/Users/admin/Work/karing-HM/harmony/entry/src/main/cpp -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security   -D__MUSL__ -O0 -g -fno-limit-debug-info  -fPIC -o CMakeFiles/karingbox.dir/karingbox_napi.cpp.o -c /Users/admin/Work/karing-HM/harmony/entry/src/main/cpp/karingbox_napi.cpp",
+  "file": "/Users/admin/Work/karing-HM/harmony/entry/src/main/cpp/karingbox_napi.cpp",
+  "output": "CMakeFiles/karingbox.dir/karingbox_napi.cpp.o"
+}
+]

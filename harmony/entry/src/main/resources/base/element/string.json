@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "karing-HM 主模块"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "karing-HM 主入口"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "karing"
+    },
+    {
+      "name": "vpn_background_reason",
+      "value": "代理连接需要后台持续运行以保持网络畅通"
+    },
+    {
+      "name": "VpnExtAbility_desc",
+      "value": "karing-HM VPN 扩展"
+    }
+  ]
+}

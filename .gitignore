@@ -1,0 +1,17 @@
+# Build outputs
+harmony/entry/build/
+harmony/.cxx/
+harmony/.idea/
+harmony/.hvigor/
+harmony/oh_modules/
+harmony/.clangd/
+harmony/entry/.preview/
+harmony/entry/build/
+
+# Go build cache
+*.o
+*.a
+
+# IDE
+.DS_Store
+*.iml

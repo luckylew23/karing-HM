@@ -1,0 +1,7 @@
+# ninja log v6
+490	602	1789777263317519610	/Users/admin/Work/karing-HM/harmony/entry/build/default/intermediates/cmake/default/obj/arm64-v8a/libkaring_vpn.so	5b91baf6176ec18e
+1	303	1789780086544734261	CMakeFiles/karingbox.dir/karingbox_napi.cpp.o	fd0f5e7280f1d19f
+3	489	1789777262831297353	CMakeFiles/karing_vpn.dir/vpn_tun.cpp.o	71e9043f2545527d
+2	243	1789787691329069746	/Users/admin/Work/karing-HM/harmony/entry/build/default/intermediates/cmake/default/obj/arm64-v8a/libkaringbox.so	69e44461cc99688f
+2	455	1789794423899395414	CMakeFiles/karingbox.dir/karingbox_napi.cpp.o	fd0f5e7280f1d19f
+455	572	1789794424352249707	/Users/admin/Work/karing-HM/harmony/entry/build/default/intermediates/cmake/default/obj/arm64-v8a/libkaringbox.so	22868e3b096ddd34

@@ -1,0 +1,8 @@
+{
+  "modelVersion": "6.0.0",
+  "name": "karing-hm",
+  "version": "0.1.0",
+  "description": "karing-HM —— Karing 的 HarmonyOS 移动版（sing-box 内核 + ArkTS 壳）",
+  "dependencies": {},
+  "devDependencies": {}
+}

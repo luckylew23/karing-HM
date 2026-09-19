@@ -1,0 +1,4 @@
+/Users/admin/Work/karing-HM/harmony/entry/.cxx/default/default/debug/arm64-v8a/CMakeFiles/karing_vpn.dir
+/Users/admin/Work/karing-HM/harmony/entry/.cxx/default/default/debug/arm64-v8a/CMakeFiles/karingbox.dir
+/Users/admin/Work/karing-HM/harmony/entry/.cxx/default/default/debug/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/admin/Work/karing-HM/harmony/entry/.cxx/default/default/debug/arm64-v8a/CMakeFiles/rebuild_cache.dir
