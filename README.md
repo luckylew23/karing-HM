@@ -1,6 +1,6 @@
 # karing-HM
 
-本项目基于 Karing / sing-box 核心能力，功能也还没有完全对齐上游 Karing。
+本项目基于 Karing / sing-box 的核心能力，原生构建 on HMOS，功能还没有完全对齐上游 Karing。
 
 注意：当前 HAP 内含由 KaringX/sing-box 编译得到的 libkaringbox.so，其上游许可证为 GPL v3 or later，并带有不得暗示与原应用存在关联的附加要求。在未同步提供对应源码、构建脚本和许可证文件前，本二进制发布不应视为已完成 GPL 合规；请勿将本仓库描述为官方 Karing 或 sing-box 发布。
 

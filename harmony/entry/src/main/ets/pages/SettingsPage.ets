@@ -1,6 +1,7 @@
 
 import { SettingsManager } from '../core/SettingsManager';
 import { VpnBridge } from '../bridge/VpnBridge';
+import { router } from '@kit.ArkUI';
 
 /**
  * 设置页：TUN、DNS、分流、日志、关于
@@ -129,6 +130,33 @@ export struct SettingsPage {
           }
           .width('100%')
           .padding({ left: 20, right: 20, top: 12, bottom: 12 })
+        }
+        .width('100%')
+        .margin({ top: 12 })
+        .backgroundColor('#FFFFFF')
+
+        // WebDAV 备份
+        Column() {
+          Row() {
+            Column({ space: 4 }) {
+              Text('WebDAV 备份')
+                .fontSize(15)
+                .fontColor('#1A1A1A')
+              Text('备份订阅和设置到 WebDAV 服务器')
+                .fontSize(12)
+                .fontColor('#999999')
+            }
+            .alignItems(HorizontalAlign.Start)
+            .layoutWeight(1)
+            Text('>')
+              .fontSize(18)
+              .fontColor('#CCCCCC')
+          }
+          .width('100%')
+          .padding({ left: 20, right: 20, top: 12, bottom: 12 })
+          .onClick(() => {
+            router.pushUrl({ url: 'pages/WebdavBackupPage' });
+          })
         }
         .width('100%')
         .margin({ top: 12 })

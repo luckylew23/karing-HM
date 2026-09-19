@@ -24,6 +24,10 @@ export class VpnSettings {
   autoStart: boolean = false;
   /** 流量统计 */
   trafficStatsEnabled: boolean = true;
+  /** WebDAV */
+  webdavUrl: string = '';
+  webdavUser: string = '';
+  webdavPassword: string = '';
 
   toJson(): Record<string, Object> {
     return {
@@ -38,7 +42,10 @@ export class VpnSettings {
       'aclEnabled': this.aclEnabled,
       'logLevel': this.logLevel,
       'autoStart': this.autoStart,
-      'trafficStatsEnabled': this.trafficStatsEnabled
+      'trafficStatsEnabled': this.trafficStatsEnabled,
+      'webdavUrl': this.webdavUrl,
+      'webdavUser': this.webdavUser,
+      'webdavPassword': this.webdavPassword
     };
   }
 
@@ -56,6 +63,9 @@ export class VpnSettings {
     s.logLevel = (json['logLevel'] as string) ?? 'info';
     s.autoStart = (json['autoStart'] as boolean) ?? false;
     s.trafficStatsEnabled = (json['trafficStatsEnabled'] as boolean) ?? true;
+    s.webdavUrl = (json['webdavUrl'] as string) ?? '';
+    s.webdavUser = (json['webdavUser'] as string) ?? '';
+    s.webdavPassword = (json['webdavPassword'] as string) ?? '';
     return s;
   }
 }
