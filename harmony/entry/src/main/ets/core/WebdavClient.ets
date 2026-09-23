@@ -86,12 +86,15 @@ export class WebdavClient {
     if (r.status >= 400) {
       throw new Error('PROPFIND failed: ' + r.status);
     }
+    hilog.info(0x0000, TAG, 'PROPFIND body=%{public}s', r.body.substring(0, Math.min(2000, r.body.length)));
     const files: string[] = [];
-    const hrefRe = /<[^>]*href[^>]*>([^<]+)<\/[^>]*href[^>]*>/gi;
+    // 匹配各种命名空间的 href 标签: <d:href>...</d:href>, <D:href>...</D:href>, <href>...</href>
+    const hrefRe = /<(?:\w+:)?href[^>]*>([^<]+)<\/(?:\w+:)?href[^>]*>/gi;
     let m: RegExpExecArray | null;
     while ((m = hrefRe.exec(r.body)) !== null) {
       const href: string = decodeURIComponent(m[1]);
       const name: string = href.split('/').pop() || '';
+      if (name.length === 0) continue;
       if (name.endsWith('.zip') && name.includes('karing-backup')) {
         files.push(name);
       }
